@@ -1,42 +1,46 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\44775\\Desktop\\API\\Pearline\\AuthAPI\\",
+  "WorkspaceRootPath": "E:\\AuthApiTest2\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\44775\\Desktop\\API\\Pearline\\AuthAPI\\Migrations\\20250829002807_initialdb.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Migrations\\20250829002807_initialdb.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{2D9F9C65-FCE4-45FF-8B1E-E96B11474734}|AuthAPI.csproj|c:\\users\\44775\\desktop\\api\\pearline\\authapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{2D9F9C65-FCE4-45FF-8B1E-E96B11474734}|AuthAPI.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{2D9F9C65-FCE4-45FF-8B1E-E96B11474734}|AuthAPI.csproj|c:\\users\\44775\\desktop\\api\\pearline\\authapi\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{2D9F9C65-FCE4-45FF-8B1E-E96B11474734}|AuthAPI.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{2D9F9C65-FCE4-45FF-8B1E-E96B11474734}|AuthAPI.csproj|c:\\users\\44775\\desktop\\api\\pearline\\authapi\\services\\emailsettings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{2D9F9C65-FCE4-45FF-8B1E-E96B11474734}|AuthAPI.csproj|solutionrelative:services\\emailsettings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{2D9F9C65-FCE4-45FF-8B1E-E96B11474734}|AuthAPI.csproj|c:\\users\\44775\\desktop\\api\\pearline\\authapi\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{2D9F9C65-FCE4-45FF-8B1E-E96B11474734}|AuthAPI.csproj|e:\\authapitest2\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{2D9F9C65-FCE4-45FF-8B1E-E96B11474734}|AuthAPI.csproj|solutionrelative:controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{2D9F9C65-FCE4-45FF-8B1E-E96B11474734}|AuthAPI.csproj|c:\\users\\44775\\desktop\\api\\pearline\\authapi\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{2D9F9C65-FCE4-45FF-8B1E-E96B11474734}|AuthAPI.csproj|e:\\authapitest2\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{2D9F9C65-FCE4-45FF-8B1E-E96B11474734}|AuthAPI.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2D9F9C65-FCE4-45FF-8B1E-E96B11474734}|AuthAPI.csproj|e:\\authapitest2\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2D9F9C65-FCE4-45FF-8B1E-E96B11474734}|AuthAPI.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2D9F9C65-FCE4-45FF-8B1E-E96B11474734}|AuthAPI.csproj|e:\\authapitest2\\services\\emailsettings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2D9F9C65-FCE4-45FF-8B1E-E96B11474734}|AuthAPI.csproj|solutionrelative:services\\emailsettings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|E:\\AuthApiTest2\\Migrations\\20250831225122_RemoveOtpTable.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Migrations\\20250831225122_RemoveOtpTable.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2D9F9C65-FCE4-45FF-8B1E-E96B11474734}|AuthAPI.csproj|e:\\authapitest2\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{2D9F9C65-FCE4-45FF-8B1E-E96B11474734}|AuthAPI.csproj|solutionrelative:data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{2D9F9C65-FCE4-45FF-8B1E-E96B11474734}|AuthAPI.csproj|c:\\users\\44775\\desktop\\api\\pearline\\authapi\\dtos\\authdtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{2D9F9C65-FCE4-45FF-8B1E-E96B11474734}|AuthAPI.csproj|e:\\authapitest2\\models\\applicationuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2D9F9C65-FCE4-45FF-8B1E-E96B11474734}|AuthAPI.csproj|solutionrelative:models\\applicationuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2D9F9C65-FCE4-45FF-8B1E-E96B11474734}|AuthAPI.csproj|e:\\authapitest2\\dtos\\authdtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{2D9F9C65-FCE4-45FF-8B1E-E96B11474734}|AuthAPI.csproj|solutionrelative:dtos\\authdtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{2D9F9C65-FCE4-45FF-8B1E-E96B11474734}|AuthAPI.csproj|c:\\users\\44775\\desktop\\api\\pearline\\authapi\\models\\otpcode.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{2D9F9C65-FCE4-45FF-8B1E-E96B11474734}|AuthAPI.csproj|solutionrelative:models\\otpcode.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{2D9F9C65-FCE4-45FF-8B1E-E96B11474734}|AuthAPI.csproj|e:\\authapitest2\\migrations\\20250831224924_adduserfields.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2D9F9C65-FCE4-45FF-8B1E-E96B11474734}|AuthAPI.csproj|solutionrelative:migrations\\20250831224924_adduserfields.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{2D9F9C65-FCE4-45FF-8B1E-E96B11474734}|AuthAPI.csproj|c:\\users\\44775\\desktop\\api\\pearline\\authapi\\models\\applicationuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{2D9F9C65-FCE4-45FF-8B1E-E96B11474734}|AuthAPI.csproj|solutionrelative:models\\applicationuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{2D9F9C65-FCE4-45FF-8B1E-E96B11474734}|AuthAPI.csproj|e:\\authapitest2\\migrations\\20250829002807_initialdb.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2D9F9C65-FCE4-45FF-8B1E-E96B11474734}|AuthAPI.csproj|solutionrelative:migrations\\20250829002807_initialdb.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -46,72 +50,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 9,
           "Children": [
             {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "20250829002807_initialdb.cs",
-              "DocumentMoniker": "C:\\Users\\44775\\Desktop\\API\\Pearline\\AuthAPI\\Migrations\\20250829002807_initialdb.cs",
-              "RelativeDocumentMoniker": "Migrations\\20250829002807_initialdb.cs",
-              "ToolTip": "C:\\Users\\44775\\Desktop\\API\\Pearline\\AuthAPI\\Migrations\\20250829002807_initialdb.cs",
-              "RelativeToolTip": "Migrations\\20250829002807_initialdb.cs",
-              "ViewState": "AgIAAA0AAAAAAAAAAAAQwAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-29T00:28:08.235Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "appsettings.json",
-              "DocumentMoniker": "C:\\Users\\44775\\Desktop\\API\\Pearline\\AuthAPI\\appsettings.json",
-              "RelativeDocumentMoniker": "appsettings.json",
-              "ToolTip": "C:\\Users\\44775\\Desktop\\API\\Pearline\\AuthAPI\\appsettings.json",
-              "RelativeToolTip": "appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-08-28T22:21:54.58Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "AuthController.cs",
-              "DocumentMoniker": "C:\\Users\\44775\\Desktop\\API\\Pearline\\AuthAPI\\Controllers\\AuthController.cs",
-              "RelativeDocumentMoniker": "Controllers\\AuthController.cs",
-              "ToolTip": "C:\\Users\\44775\\Desktop\\API\\Pearline\\AuthAPI\\Controllers\\AuthController.cs",
-              "RelativeToolTip": "Controllers\\AuthController.cs",
-              "ViewState": "AgIAAHoAAAAAAAAAAAAuwF8AAAAnAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-28T22:19:30.447Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "EmailSettings.cs",
-              "DocumentMoniker": "C:\\Users\\44775\\Desktop\\API\\Pearline\\AuthAPI\\Services\\EmailSettings.cs",
-              "RelativeDocumentMoniker": "Services\\EmailSettings.cs",
-              "ToolTip": "C:\\Users\\44775\\Desktop\\API\\Pearline\\AuthAPI\\Services\\EmailSettings.cs",
-              "RelativeToolTip": "Services\\EmailSettings.cs",
-              "ViewState": "AgIAABYAAAAAAAAAAAAwwCcAAAANAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-28T22:18:23.509Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\44775\\Desktop\\API\\Pearline\\AuthAPI\\Program.cs",
-              "RelativeDocumentMoniker": "Program.cs",
-              "ToolTip": "C:\\Users\\44775\\Desktop\\API\\Pearline\\AuthAPI\\Program.cs",
-              "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAABUAAAAAAAAAAAAAAAwAAABaAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-28T22:15:08.909Z",
-              "EditorCaption": ""
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
             },
             {
               "$type": "Bookmark",
@@ -122,68 +65,141 @@
               "Name": "ST:0:0:{0ad07096-bba9-4900-a651-0598d26f6d24}"
             },
             {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "ApplicationDbContext.cs",
-              "DocumentMoniker": "C:\\Users\\44775\\Desktop\\API\\Pearline\\AuthAPI\\Data\\ApplicationDbContext.cs",
-              "RelativeDocumentMoniker": "Data\\ApplicationDbContext.cs",
-              "ToolTip": "C:\\Users\\44775\\Desktop\\API\\Pearline\\AuthAPI\\Data\\ApplicationDbContext.cs",
-              "RelativeToolTip": "Data\\ApplicationDbContext.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-28T22:12:20.608Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "AuthDtos.cs",
-              "DocumentMoniker": "C:\\Users\\44775\\Desktop\\API\\Pearline\\AuthAPI\\DTOs\\AuthDtos.cs",
-              "RelativeDocumentMoniker": "DTOs\\AuthDtos.cs",
-              "ToolTip": "C:\\Users\\44775\\Desktop\\API\\Pearline\\AuthAPI\\DTOs\\AuthDtos.cs",
-              "RelativeToolTip": "DTOs\\AuthDtos.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-28T22:17:38.366Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "OtpCode.cs",
-              "DocumentMoniker": "C:\\Users\\44775\\Desktop\\API\\Pearline\\AuthAPI\\Models\\OtpCode.cs",
-              "RelativeDocumentMoniker": "Models\\OtpCode.cs",
-              "ToolTip": "C:\\Users\\44775\\Desktop\\API\\Pearline\\AuthAPI\\Models\\OtpCode.cs",
-              "RelativeToolTip": "Models\\OtpCode.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-28T22:15:47.228Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "ApplicationUser.cs",
-              "DocumentMoniker": "C:\\Users\\44775\\Desktop\\API\\Pearline\\AuthAPI\\Models\\ApplicationUser.cs",
-              "RelativeDocumentMoniker": "Models\\ApplicationUser.cs",
-              "ToolTip": "C:\\Users\\44775\\Desktop\\API\\Pearline\\AuthAPI\\Models\\ApplicationUser.cs",
-              "RelativeToolTip": "Models\\ApplicationUser.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAvAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-28T22:14:26.056Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
-            },
-            {
               "$type": "Bookmark",
               "Name": "ST:1:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
             },
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{eefa5220-e298-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "20250831225122_RemoveOtpTable.cs",
+              "DocumentMoniker": "E:\\AuthApiTest2\\Migrations\\20250831225122_RemoveOtpTable.cs",
+              "RelativeDocumentMoniker": "Migrations\\20250831225122_RemoveOtpTable.cs",
+              "ToolTip": "E:\\AuthApiTest2\\Migrations\\20250831225122_RemoveOtpTable.cs",
+              "RelativeToolTip": "Migrations\\20250831225122_RemoveOtpTable.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-31T22:51:22.601Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "20250831224924_AddUserFields.cs",
+              "DocumentMoniker": "E:\\AuthApiTest2\\Migrations\\20250831224924_AddUserFields.cs",
+              "RelativeDocumentMoniker": "Migrations\\20250831224924_AddUserFields.cs",
+              "ToolTip": "E:\\AuthApiTest2\\Migrations\\20250831224924_AddUserFields.cs",
+              "RelativeToolTip": "Migrations\\20250831224924_AddUserFields.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-31T22:49:25.716Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "20250829002807_initialdb.cs",
+              "DocumentMoniker": "E:\\AuthApiTest2\\Migrations\\20250829002807_initialdb.cs",
+              "RelativeDocumentMoniker": "Migrations\\20250829002807_initialdb.cs",
+              "ToolTip": "E:\\AuthApiTest2\\Migrations\\20250829002807_initialdb.cs",
+              "RelativeToolTip": "Migrations\\20250829002807_initialdb.cs",
+              "ViewState": "AgIAAA0AAAAAAAAAAAAQwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-29T00:28:08.235Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "E:\\AuthApiTest2\\appsettings.json",
+              "RelativeDocumentMoniker": "appsettings.json",
+              "ToolTip": "E:\\AuthApiTest2\\appsettings.json",
+              "RelativeToolTip": "appsettings.json",
+              "ViewState": "AgIAAAQAAAAAAAAAAAAAABMAAAAUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-08-28T22:21:54.58Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "E:\\AuthApiTest2\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "Controllers\\AuthController.cs",
+              "ToolTip": "E:\\AuthApiTest2\\Controllers\\AuthController.cs*",
+              "RelativeToolTip": "Controllers\\AuthController.cs*",
+              "ViewState": "AgIAAIEAAAAAAAAAAAAmwIsAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-28T22:19:30.447Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "EmailSettings.cs",
+              "DocumentMoniker": "E:\\AuthApiTest2\\Services\\EmailSettings.cs",
+              "RelativeDocumentMoniker": "Services\\EmailSettings.cs",
+              "ToolTip": "E:\\AuthApiTest2\\Services\\EmailSettings.cs",
+              "RelativeToolTip": "Services\\EmailSettings.cs",
+              "ViewState": "AgIAABoAAAAAAAAAAAAmwDMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-28T22:18:23.509Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Program.cs",
+              "DocumentMoniker": "E:\\AuthApiTest2\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "E:\\AuthApiTest2\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAACYAAAAAAAAAAAAqwEAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-28T22:15:08.909Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "ApplicationDbContext.cs",
+              "DocumentMoniker": "E:\\AuthApiTest2\\Data\\ApplicationDbContext.cs",
+              "RelativeDocumentMoniker": "Data\\ApplicationDbContext.cs",
+              "ToolTip": "E:\\AuthApiTest2\\Data\\ApplicationDbContext.cs",
+              "RelativeToolTip": "Data\\ApplicationDbContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-28T22:12:20.608Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "AuthDtos.cs",
+              "DocumentMoniker": "E:\\AuthApiTest2\\DTOs\\AuthDtos.cs",
+              "RelativeDocumentMoniker": "DTOs\\AuthDtos.cs",
+              "ToolTip": "E:\\AuthApiTest2\\DTOs\\AuthDtos.cs",
+              "RelativeToolTip": "DTOs\\AuthDtos.cs",
+              "ViewState": "AgIAACIAAAAAAAAAAAAQwDMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-28T22:17:38.366Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "ApplicationUser.cs",
+              "DocumentMoniker": "E:\\AuthApiTest2\\Models\\ApplicationUser.cs",
+              "RelativeDocumentMoniker": "Models\\ApplicationUser.cs",
+              "ToolTip": "E:\\AuthApiTest2\\Models\\ApplicationUser.cs",
+              "RelativeToolTip": "Models\\ApplicationUser.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAkwBkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-28T22:14:26.056Z",
+              "EditorCaption": ""
             }
           ]
         }

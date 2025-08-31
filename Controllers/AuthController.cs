@@ -3,7 +3,6 @@ using AuthAPI.Models;
 using AuthAPI.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -13,7 +12,7 @@ using static AuthAPI.DTOs.AuthDtos;
 namespace AuthAPI.Controllers;
 
 [ApiController]
-[Route("api/[controller]")] 
+[Route("api/[controller]")]
 public class AuthController : ControllerBase
 {
     private readonly UserManager<ApplicationUser> _userManager;
@@ -40,17 +39,37 @@ public class AuthController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> Register(RegisterDto dto)
     {
+        if (dto.Password != dto.ConfirmPassword)
+            return BadRequest("Passwords do not match.");
+
         var existing = await _userManager.FindByEmailAsync(dto.Email);
         if (existing is not null) return BadRequest("Email already registered.");
 
-        var user = new ApplicationUser { UserName = dto.Email, Email = dto.Email };
+        var user = new ApplicationUser
+        {
+            UserName = dto.Email,
+            Email = dto.Email,
+            FirstName = dto.FirstName,
+            LastName = dto.LastName,
+            MobileNumber = dto.MobileNumber,
+            CompanyName = dto.CompanyName,
+            CompanyWebsite = dto.CompanyWebsite,
+            VatNumber = dto.VatNumber,
+            StreetAddress = dto.StreetAddress,
+            City = dto.City,
+            Country = dto.Country,
+            State = dto.State,
+            ZipCode = dto.ZipCode,
+            ProductCategories = dto.ProductCategories
+        };
+
         var result = await _userManager.CreateAsync(user, dto.Password);
         if (!result.Succeeded) return BadRequest(result.Errors);
 
         return Ok("User registered successfully.");
     }
 
-    // ===== Login (JWT) =====
+    // ===== Login (Generate JWT) =====
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginDto dto)
     {
@@ -81,64 +100,53 @@ public class AuthController : ControllerBase
         return Ok(new { token = jwt });
     }
 
-    // ===== Forgot Password: generate & send OTP =====
+    // ===== Forgot Password (Send Reset Email) =====
     [HttpPost("forgot-password")]
     public async Task<IActionResult> ForgotPassword(ForgotPasswordDto dto)
     {
         var user = await _userManager.FindByEmailAsync(dto.Email);
-        if (user is null) return Ok("If the email exists, an OTP will be sent."); // avoid user enumeration
+        if (user is null) return Ok("If the email exists, a reset link will be sent.");
 
-        // Generate 6-digit OTP
-        var random = new Random();
-        var otp = random.Next(100000, 999999).ToString();
+        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+        var resetLink = $"{_config["App:ClientUrl"]}/reset-password?email={user.Email}&token={Uri.EscapeDataString(token)}";
 
-        // Save to DB (invalidate previous OTPs for same email)
-        var existingOtps = await _db.OtpCodes.Where(x => x.Email == dto.Email && !x.IsUsed).ToListAsync();
-        foreach (var x in existingOtps) x.IsUsed = true; // invalidate old ones
-        await _db.SaveChangesAsync();
+        // HTML email template
+        var body = $@"
+        <html>
+            <body style='font-family:Arial, sans-serif; color:#333;'>
+                <h2 style='color:#4CAF50'>Password Reset Request</h2>
+                <p>Hello,</p>
+                <p>We received a request to reset your password for your <strong>Pearline</strong> account.</p>
+                <p>Click the button below to set a new password:</p>
+                <p style='text-align:center; margin:20px 0'>
+                    <a href='{resetLink}' 
+                       style='background-color:#4CAF50; color:white; padding:10px 20px; text-decoration:none; border-radius:5px;'>
+                       Reset Password
+                    </a>
+                </p>
+                <p>If you didn’t request this, just ignore the email.</p>
+                <br/>
+                <p>Best regards,<br/>The Pearline Team</p>
+            </body>
+        </html>";
 
-        var entry = new OtpCode
-        {
-            Email = dto.Email,
-            Code = otp,
-            ExpirationTimeUtc = DateTime.UtcNow.AddMinutes(5),
-            IsUsed = false
-        };
-        await _db.OtpCodes.AddAsync(entry);
-        await _db.SaveChangesAsync();
+        await _emailService.SendEmailAsync(
+            dto.Email,
+            "Reset Your Password - Pearline",
+            body
+        );
 
-        await _emailService.SendEmailAsync(dto.Email, "Reset Password OTP", $"Your OTP code is <b>{otp}</b>. It expires in 5 minutes.");
-
-        return Ok("If the email exists, an OTP will be sent.");
+        return Ok("If the email exists, a reset link will be sent.");
     }
 
-    // ===== Verify OTP =====
-    [HttpPost("verify-otp")]
-    public async Task<IActionResult> VerifyOtp(VerifyOtpDto dto)
-    {
-        var otp = await _db.OtpCodes
-            .Where(o => o.Email == dto.Email && o.Code == dto.Code && !o.IsUsed)
-            .FirstOrDefaultAsync();
-
-        if (otp is null || otp.ExpirationTimeUtc < DateTime.UtcNow)
-            return BadRequest("Invalid or expired OTP.");
-
-        otp.IsUsed = true; // single-use
-        await _db.SaveChangesAsync();
-
-        return Ok("OTP verified. You can now reset your password.");
-    }
-
-    // ===== Reset Password (after Verify) =====
+    // ===== Reset Password =====
     [HttpPost("reset-password")]
     public async Task<IActionResult> ResetPassword(ResetPasswordDto dto)
     {
         var user = await _userManager.FindByEmailAsync(dto.Email);
         if (user is null) return BadRequest("User not found.");
 
-        // Generate Identity reset token
-        var identityToken = await _userManager.GeneratePasswordResetTokenAsync(user);
-        var result = await _userManager.ResetPasswordAsync(user, identityToken, dto.NewPassword);
+        var result = await _userManager.ResetPasswordAsync(user, dto.Token, dto.NewPassword);
         if (!result.Succeeded) return BadRequest(result.Errors);
 
         return Ok("Password has been reset successfully.");

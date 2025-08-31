@@ -4336,23 +4336,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\44775\\.nuget\\packages\\": {},
+    "C:\\Users\\LENOVO\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\44775\\Desktop\\API\\Pearline\\AuthAPI\\AuthAPI.csproj",
+      "projectUniqueName": "E:\\AuthApiTest2\\AuthAPI.csproj",
       "projectName": "AuthAPI",
-      "projectPath": "C:\\Users\\44775\\Desktop\\API\\Pearline\\AuthAPI\\AuthAPI.csproj",
-      "packagesPath": "C:\\Users\\44775\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\44775\\Desktop\\API\\Pearline\\AuthAPI\\obj\\",
+      "projectPath": "E:\\AuthApiTest2\\AuthAPI.csproj",
+      "packagesPath": "C:\\Users\\LENOVO\\.nuget\\packages\\",
+      "outputPath": "E:\\AuthApiTest2\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\44775\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\LENOVO\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -4379,7 +4379,7 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "9.0.300"
+      "SdkAnalysisLevel": "9.0.100"
     },
     "frameworks": {
       "net8.0": {
@@ -4431,7 +4431,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.102/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

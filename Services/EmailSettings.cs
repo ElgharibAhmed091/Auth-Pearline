@@ -4,6 +4,7 @@ using System.Net.Mail;
 
 namespace AuthAPI.Services
 {
+    // Email settings model (bound from appsettings.json)
     public class EmailSettings
     {
         public string SmtpServer { get; set; } = string.Empty;
@@ -14,11 +15,13 @@ namespace AuthAPI.Services
         public string Password { get; set; } = string.Empty;
     }
 
+    // Email service interface
     public interface IEmailService
     {
         Task SendEmailAsync(string to, string subject, string body);
     }
 
+    // Email service implementation
     public class EmailService : IEmailService
     {
         private readonly EmailSettings _settings;
@@ -41,8 +44,9 @@ namespace AuthAPI.Services
                 From = new MailAddress(_settings.SenderEmail, _settings.SenderName),
                 Subject = subject,
                 Body = body,
-                IsBodyHtml = true
+                IsBodyHtml = true // allow HTML content
             };
+
             message.To.Add(to);
 
             await client.SendMailAsync(message);
