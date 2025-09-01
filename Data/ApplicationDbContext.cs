@@ -7,5 +7,6 @@ namespace AuthAPI.Data
     public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : IdentityDbContext<ApplicationUser>(options)
     {
+        // TEST 1 
     }
 }
