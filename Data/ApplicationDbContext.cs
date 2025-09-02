@@ -8,5 +8,6 @@ namespace AuthAPI.Data
         : IdentityDbContext<ApplicationUser>(options)
     {
         // TEST 1 
+        // test 2
     }
 }
