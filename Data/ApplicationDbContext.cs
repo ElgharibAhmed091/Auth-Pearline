@@ -5,8 +5,8 @@ using Microsoft.EntityFrameworkCore;
 namespace AuthAPI.Data
 {
     public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-    : IdentityDbContext<ApplicationUser>(options)
+        : IdentityDbContext<ApplicationUser>(options)
     {
-        public DbSet<OtpCode> OtpCodes => Set<OtpCode>();
+        // TEST 1 
     }
 }
