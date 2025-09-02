@@ -1,5 +1,5 @@
 ﻿using AuthAPI.Data;
-using AuthAPI.Models;
+using AuthAPI.Helpers;   
 using AuthAPI.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -45,6 +45,9 @@ public class AuthController : ControllerBase
         var existing = await _userManager.FindByEmailAsync(dto.Email);
         if (existing is not null) return BadRequest("Email already registered.");
 
+        if (!CountryHelper.Countries.Contains(dto.Country))
+            return BadRequest("Invalid country selected.");
+
         var user = new ApplicationUser
         {
             UserName = dto.Email,
@@ -52,6 +55,7 @@ public class AuthController : ControllerBase
             FirstName = dto.FirstName,
             LastName = dto.LastName,
             MobileNumber = dto.MobileNumber,
+            PhoneNumber = dto.PhoneNumber,
             CompanyName = dto.CompanyName,
             CompanyWebsite = dto.CompanyWebsite,
             VatNumber = dto.VatNumber,
@@ -59,8 +63,7 @@ public class AuthController : ControllerBase
             City = dto.City,
             Country = dto.Country,
             State = dto.State,
-            ZipCode = dto.ZipCode,
-            ProductCategories = dto.ProductCategories
+            ZipCode = dto.ZipCode
         };
 
         var result = await _userManager.CreateAsync(user, dto.Password);
@@ -150,5 +153,12 @@ public class AuthController : ControllerBase
         if (!result.Succeeded) return BadRequest(result.Errors);
 
         return Ok("Password has been reset successfully.");
+    }
+
+    // ===== Get Countries =====
+    [HttpGet("countries")]
+    public IActionResult GetCountries()
+    {
+        return Ok(CountryHelper.Countries);
     }
 }

@@ -12,6 +12,7 @@
             public string Password { get; set; } = string.Empty;
             public string ConfirmPassword { get; set; } = string.Empty;
             public string MobileNumber { get; set; } = string.Empty;
+            public string PhoneNumber { get; set; } = string.Empty; // new field
 
             // Company Info
             public string CompanyName { get; set; } = string.Empty;
@@ -23,8 +24,6 @@
             public string? State { get; set; }
             public string ZipCode { get; set; } = string.Empty;
 
-            // Product interests
-            public string ProductCategories { get; set; } = string.Empty;
         }
 
         // Login
