@@ -114,24 +114,53 @@ public class AuthController : ControllerBase
         var resetLink = $"{_config["App:ClientUrl"]}/reset-password?email={user.Email}&token={Uri.EscapeDataString(token)}";
 
         // HTML email template
+        // HTML email template (Pearline Style)
+        // HTML email template with logo and styled card
         var body = $@"
-        <html>
-            <body style='font-family:Arial, sans-serif; color:#333;'>
-                <h2 style='color:#4CAF50'>Password Reset Request</h2>
-                <p>Hello,</p>
-                <p>We received a request to reset your password for your <strong>Pearline</strong> account.</p>
-                <p>Click the button below to set a new password:</p>
-                <p style='text-align:center; margin:20px 0'>
-                    <a href='{resetLink}' 
-                       style='background-color:#4CAF50; color:white; padding:10px 20px; text-decoration:none; border-radius:5px;'>
-                       Reset Password
-                    </a>
-                </p>
-                <p>If you didn’t request this, just ignore the email.</p>
-                <br/>
-                <p>Best regards,<br/>The Pearline Team</p>
-            </body>
-        </html>";
+<html>
+  <body style='font-family:Arial, sans-serif; color:#333; background-color:#f2f2f2; padding:20px;'>
+    <div style='max-width:600px; margin:0 auto; background:#fff; border-radius:6px; 
+                box-shadow:0 2px 6px rgba(0,0,0,0.1); padding:30px;'>
+
+      <!-- Logo -->
+      <div style='text-align:center; margin-bottom:20px;'>
+        <img src='https://i.ibb.co/gZSmfmRb/pearline-logo-png.jpg' alt='Pearline Logo' style='max-height:70px;' />
+      </div>
+
+      <!-- Title -->
+      <h2 style='color:#222; text-align:center; font-weight:normal;'>Reset your Pearline password</h2>
+
+      <!-- Message -->
+      <p style='font-size:15px; line-height:1.6;'>Hello,</p>
+      <p style='font-size:15px; line-height:1.6;'>
+        There was recently a request to change the password for your account.<br/>
+        If you requested this change, set a new password here:
+      </p>
+
+      <!-- Button -->
+      <p style='text-align:center; margin:30px 0;'>
+        <a href='{resetLink}'
+           style='background-color:#007BFF; color:#fff; padding:12px 25px; 
+                  text-decoration:none; border-radius:4px; font-size:15px; font-weight:bold;'>
+           Set a New Password
+        </a>
+      </p>
+
+      <!-- Footer -->
+      <p style='font-size:14px; line-height:1.6;'>
+        If you did not make this request, you can ignore this email and your password will remain the same.
+      </p>
+
+      <p style='font-size:14px; margin-top:30px;'>
+        Thank you,<br/>
+        <strong>Pearline Team</strong>
+      </p>
+    </div>
+  </body>
+</html>";
+
+
+
 
         await _emailService.SendEmailAsync(
             dto.Email,
