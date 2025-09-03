@@ -1,6 +1,7 @@
 ﻿using AuthAPI.Data;
-using AuthAPI.Helpers;   
+using AuthAPI.Helpers;
 using AuthAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -72,7 +73,7 @@ public class AuthController : ControllerBase
         return Ok("User registered successfully.");
     }
 
-    // ===== Login (Generate JWT) =====
+    // ===== Login =====
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginDto dto)
     {
@@ -103,7 +104,7 @@ public class AuthController : ControllerBase
         return Ok(new { token = jwt });
     }
 
-    // ===== Forgot Password (Send Reset Email) =====
+    // ===== Forgot Password =====
     [HttpPost("forgot-password")]
     public async Task<IActionResult> ForgotPassword(ForgotPasswordDto dto)
     {
@@ -113,54 +114,13 @@ public class AuthController : ControllerBase
         var token = await _userManager.GeneratePasswordResetTokenAsync(user);
         var resetLink = $"{_config["App:ClientUrl"]}/reset-password?email={user.Email}&token={Uri.EscapeDataString(token)}";
 
-        // HTML email template
-        // HTML email template (Pearline Style)
-        // HTML email template with logo and styled card
         var body = $@"
-<html>
-  <body style='font-family:Arial, sans-serif; color:#333; background-color:#f2f2f2; padding:20px;'>
-    <div style='max-width:600px; margin:0 auto; background:#fff; border-radius:6px; 
-                box-shadow:0 2px 6px rgba(0,0,0,0.1); padding:30px;'>
-
-      <!-- Logo -->
-      <div style='text-align:center; margin-bottom:20px;'>
-        <img src='https://i.ibb.co/gZSmfmRb/pearline-logo-png.jpg' alt='Pearline Logo' style='max-height:70px;' />
-      </div>
-
-      <!-- Title -->
-      <h2 style='color:#222; text-align:center; font-weight:normal;'>Reset your Pearline password</h2>
-
-      <!-- Message -->
-      <p style='font-size:15px; line-height:1.6;'>Hello,</p>
-      <p style='font-size:15px; line-height:1.6;'>
-        There was recently a request to change the password for your account.<br/>
-        If you requested this change, set a new password here:
-      </p>
-
-      <!-- Button -->
-      <p style='text-align:center; margin:30px 0;'>
-        <a href='{resetLink}'
-           style='background-color:#007BFF; color:#fff; padding:12px 25px; 
-                  text-decoration:none; border-radius:4px; font-size:15px; font-weight:bold;'>
-           Set a New Password
-        </a>
-      </p>
-
-      <!-- Footer -->
-      <p style='font-size:14px; line-height:1.6;'>
-        If you did not make this request, you can ignore this email and your password will remain the same.
-      </p>
-
-      <p style='font-size:14px; margin-top:30px;'>
-        Thank you,<br/>
-        <strong>Pearline Team</strong>
-      </p>
-    </div>
-  </body>
-</html>";
-
-
-
+        <html>
+          <body>
+            <p>Click the link below to reset your password:</p>
+            <a href='{resetLink}'>Reset Password</a>
+          </body>
+        </html>";
 
         await _emailService.SendEmailAsync(
             dto.Email,
@@ -190,4 +150,26 @@ public class AuthController : ControllerBase
     {
         return Ok(CountryHelper.Countries);
     }
+
+    // ===== Delete Account =====
+    [Authorize]
+    [HttpDelete("delete-account")]
+    public async Task<IActionResult> DeleteAccount()
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userId))
+            return Unauthorized("User not found.");
+
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user is null)
+            return NotFound("User not found.");
+
+        var result = await _userManager.DeleteAsync(user);
+        if (!result.Succeeded)
+            return BadRequest(result.Errors);
+
+        return Ok("Account deleted successfully.");
+    }
+
+
 }
