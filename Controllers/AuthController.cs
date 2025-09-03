@@ -84,11 +84,13 @@ public class AuthController : ControllerBase
         if (!check.Succeeded) return Unauthorized("Invalid credentials.");
 
         var claims = new List<Claim>
-        {
-            new(JwtRegisteredClaimNames.Sub, user.Email ?? ""),
-            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new(ClaimTypes.NameIdentifier, user.Id)
-        };
+{
+    new(JwtRegisteredClaimNames.Sub, user.Email ?? ""),
+    new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+    new(ClaimTypes.NameIdentifier, user.Id),
+    new(ClaimTypes.Email, user.Email ?? "")
+};
+
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -151,22 +153,29 @@ public class AuthController : ControllerBase
         return Ok(CountryHelper.Countries);
     }
 
-    // ===== Delete Account =====
     [Authorize]
     [HttpDelete("delete-account")]
     public async Task<IActionResult> DeleteAccount()
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (string.IsNullOrEmpty(userId))
-            return Unauthorized("User not found.");
+        var email = User.FindFirstValue(ClaimTypes.Email);
 
-        var user = await _userManager.FindByIdAsync(userId);
-        if (user is null)
-            return NotFound("User not found.");
+        ApplicationUser? user = null;
+
+        if (!string.IsNullOrEmpty(userId))
+        {
+            user = await _userManager.FindByIdAsync(userId);
+        }
+
+        if (user == null && !string.IsNullOrEmpty(email))
+        {
+            user = await _userManager.FindByEmailAsync(email);
+        }
+
+        if (user == null) return NotFound("User not found.");
 
         var result = await _userManager.DeleteAsync(user);
-        if (!result.Succeeded)
-            return BadRequest(result.Errors);
+        if (!result.Succeeded) return BadRequest(result.Errors);
 
         return Ok("Account deleted successfully.");
     }
