@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using AuthAPI.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace AuthAPI.Data
@@ -8,5 +9,7 @@ namespace AuthAPI.Data
     {
         // TEST 1 
         // test 2
+        // test 3 contact us
+        public DbSet<ContactMessage> ContactMessages { get; set; }
     }
 }
