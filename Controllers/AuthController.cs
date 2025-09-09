@@ -117,12 +117,48 @@ public class AuthController : ControllerBase
         var resetLink = $"{_config["App:ClientUrl"]}/reset-password?email={user.Email}&token={Uri.EscapeDataString(token)}";
 
         var body = $@"
-        <html>
-          <body>
-            <p>Click the link below to reset your password:</p>
-            <a href='{resetLink}'>Reset Password</a>
-          </body>
-        </html>";
+<html>
+  <body style='font-family: Arial, sans-serif; color:#333; background-color:#ffffff; padding:20px; margin:0;'>
+    <div style='max-width:600px; margin:0 auto; background:#fff;'>
+      
+      <!-- Logo -->
+      <div style='margin-bottom:20px;'>
+        <img src='https://i.ibb.co/JwJ5pVjL/logo-Blueeee.jpg' alt='Pearline Logo' style='max-width:180px;' />
+      </div>
+
+      <!-- Greeting -->
+      <p style='font-size:15px; color:#333; margin-bottom:20px;'>
+        Hello {user.UserName},
+      </p>
+
+      <!-- Message -->
+      <p style='font-size:15px; color:#333; margin-bottom:15px;'>
+        There was recently a request to change the password for your account.
+      </p>
+      <p style='font-size:15px; color:#333; margin-bottom:25px;'>
+        If you requested this change, set a new password here:
+      </p>
+
+      <!-- Button -->
+      <a href='{resetLink}' 
+         style='display:inline-block; padding:12px 24px; background-color:#0B6C63; color:#fff; 
+                text-decoration:none; font-size:15px; font-weight:bold; border-radius:4px;'>
+        Set a New Password
+      </a>
+
+      <!-- Footer -->
+      <p style='font-size:14px; color:#555; margin-top:30px; line-height:1.4;'>
+        If you did not make this request, you can ignore this email and your password will remain the same.
+      </p>
+
+      <p style='font-size:14px; color:#333; margin-top:20px;'>
+        Thank you, Pearline Team
+      </p>
+    </div>
+  </body>
+</html>";
+
+
 
         await _emailService.SendEmailAsync(
             dto.Email,
@@ -132,6 +168,7 @@ public class AuthController : ControllerBase
 
         return Ok("If the email exists, a reset link will be sent.");
     }
+
 
     // ===== Reset Password =====
     [HttpPost("reset-password")]
