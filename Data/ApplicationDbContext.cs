@@ -1,6 +1,7 @@
 ﻿using AuthAPI.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using testapi.Models;
 
 namespace AuthAPI.Data
 {
@@ -11,5 +12,7 @@ namespace AuthAPI.Data
         // test 2
         // test 3 contact us
         public DbSet<ContactMessage> ContactMessages { get; set; }
+        public DbSet<Product> Products { get; set; }
+        public DbSet<Category> Categories { get; set; }
     }
 }
