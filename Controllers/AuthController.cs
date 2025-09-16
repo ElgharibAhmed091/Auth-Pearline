@@ -183,12 +183,6 @@ public class AuthController : ControllerBase
         return Ok("Password has been reset successfully.");
     }
 
-    // ===== Get Countries =====
-    [HttpGet("countries")]
-    public IActionResult GetCountries()
-    {
-        return Ok(CountryHelper.Countries);
-    }
 
     [Authorize]
     [HttpDelete("delete-account")]
@@ -215,6 +209,13 @@ public class AuthController : ControllerBase
         if (!result.Succeeded) return BadRequest(result.Errors);
 
         return Ok("Account deleted successfully.");
+    }
+
+    // ===== Get Countries =====
+    [HttpGet("countries")]
+    public IActionResult GetCountries()
+    {
+        return Ok(CountryHelper.Countries);
     }
 
 
