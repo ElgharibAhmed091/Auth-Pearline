@@ -210,6 +210,47 @@ public class AuthController : ControllerBase
 
         return Ok("Account deleted successfully.");
     }
+    [Authorize]
+    [HttpGet("profile")]
+    public async Task<IActionResult> GetProfile()
+    {
+        // شوف إيه اللي جاي من التوكن
+        var claims = User.Claims.Select(c => new { c.Type, c.Value }).ToList();
+
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var email = User.FindFirstValue(ClaimTypes.Email);
+
+        ApplicationUser? user = null;
+
+        if (!string.IsNullOrEmpty(userId))
+            user = await _userManager.FindByIdAsync(userId);
+
+        if (user == null && !string.IsNullOrEmpty(email))
+            user = await _userManager.FindByEmailAsync(email);
+
+        if (user == null)
+            return NotFound(new { message = "User not found.", claims });
+
+        var profile = new
+        {
+            user.FirstName,
+            user.LastName,
+            user.Email,
+            user.MobileNumber,
+            user.PhoneNumber,
+            user.CompanyName,
+            user.CompanyWebsite,
+            user.VatNumber,
+            user.StreetAddress,
+            user.City,
+            user.State,
+            user.ZipCode,
+            user.Country
+        };
+
+        return Ok(profile);
+    }
+
 
     // ===== Get Countries =====
     [HttpGet("countries")]
