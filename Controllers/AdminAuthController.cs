@@ -1,5 +1,6 @@
 ﻿using AuthAPI.DTOs;
 using AuthAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -30,14 +31,16 @@ namespace AuthAPI.Controllers
             _configuration = configuration;
         }
 
-        // POST: api/admin/auth/register
-        [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] AdminRegisterDto dto)
+        // POST: api/admin/auth/create-admin
+        // Only SuperAdmin can create Admin accounts
+        [HttpPost("create-admin")]
+        [Authorize(Roles = "SuperAdmin")]
+        public async Task<IActionResult> CreateAdmin([FromBody] AdminRegisterDto dto)
         {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
             if (!await _roleManager.RoleExistsAsync("Admin"))
-            {
                 await _roleManager.CreateAsync(new IdentityRole("Admin"));
-            }
 
             var user = new ApplicationUser
             {
@@ -45,7 +48,8 @@ namespace AuthAPI.Controllers
                 Email = dto.Email,
                 FirstName = dto.FirstName,
                 LastName = dto.LastName,
-                MobileNumber = dto.MobileNumber
+                MobileNumber = dto.MobileNumber,
+                EmailConfirmed = true
             };
 
             var result = await _userManager.CreateAsync(user, dto.Password);
@@ -54,7 +58,7 @@ namespace AuthAPI.Controllers
 
             await _userManager.AddToRoleAsync(user, "Admin");
 
-            return Ok(new { Message = "Admin registered successfully" });
+            return Ok(new { Message = "Admin created successfully", UserId = user.Id });
         }
 
         // POST: api/admin/auth/login
@@ -62,21 +66,28 @@ namespace AuthAPI.Controllers
         public async Task<IActionResult> Login([FromBody] AdminLoginDto dto)
         {
             var user = await _userManager.FindByEmailAsync(dto.Email);
-            if (user == null || !await _userManager.IsInRoleAsync(user, "Admin"))
-                return Unauthorized(new { Message = "Invalid admin credentials" });
+            if (user == null)
+                return Unauthorized(new { Message = "Invalid credentials" });
 
             var result = await _signInManager.CheckPasswordSignInAsync(user, dto.Password, false);
             if (!result.Succeeded)
                 return Unauthorized(new { Message = "Invalid email or password" });
 
-            // Generate JWT Token
+            // get roles dynamically
+            var roles = await _userManager.GetRolesAsync(user);
+
             var authClaims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id),
                 new Claim(ClaimTypes.Email, user.Email ?? ""),
-                new Claim(ClaimTypes.Role, "Admin"),
+                new Claim(ClaimTypes.Name, user.UserName ?? ""),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
+
+            foreach (var role in roles)
+            {
+                authClaims.Add(new Claim(ClaimTypes.Role, role));
+            }
 
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
 
