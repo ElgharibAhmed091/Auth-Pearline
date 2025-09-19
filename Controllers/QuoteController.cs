@@ -21,6 +21,78 @@ namespace AuthAPI.Controllers
             _context = context;
         }
 
+
+        // GET: api/quote/my
+        [HttpGet("my")]
+        public async Task<IActionResult> GetMyQuotes()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var quotes = await _context.Quotes
+                .Include(q => q.Cart)
+                .ThenInclude(c => c.Items)
+                .ThenInclude(i => i.Product)
+                .Where(q => q.Cart.UserId == userId)
+                .ToListAsync();
+
+            if (!quotes.Any())
+                return NotFound(new { message = "No quotes found for this user" });
+
+            var response = quotes.Select(q => new
+            {
+                q.Id,
+                q.Email,
+                q.Comments,
+                q.TotalPrice,
+                Items = q.Cart.Items.Select(i => new
+                {
+                    i.Id,
+                    ProductName = i.Product?.ProductName,
+                    i.Quantity,
+                    PricePerUnit = i.Product?.UnitPrice ?? 0m,
+                    PricePerCase = i.Product?.CasePrice ?? 0m,
+                    Total = (i.Product?.CasePrice ?? i.Product?.UnitPrice ?? 0m) * i.Quantity
+                })
+            });
+
+            return Ok(response);
+        }
+        // GET: api/quote/{id}
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetQuoteById(int id)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var quote = await _context.Quotes
+                .Include(q => q.Cart)
+                .ThenInclude(c => c.Items)
+                .ThenInclude(i => i.Product)
+                .FirstOrDefaultAsync(q => q.Id == id && q.Cart.UserId == userId);
+
+            if (quote == null)
+                return NotFound(new { message = "Quote not found" });
+
+            var response = new
+            {
+                quote.Id,
+                quote.Email,
+                quote.Comments,
+                quote.TotalPrice,
+                Items = quote.Cart.Items.Select(i => new
+                {
+                    i.Id,
+                    ProductName = i.Product?.ProductName,
+                    i.Quantity,
+                    PricePerUnit = i.Product?.UnitPrice ?? 0m,
+                    PricePerCase = i.Product?.CasePrice ?? 0m,
+                    Total = (i.Product?.CasePrice ?? i.Product?.UnitPrice ?? 0m) * i.Quantity
+                })
+            };
+
+            return Ok(response);
+        }
+
+
         // POST: api/quote/submit
         [HttpPost("submit")]
         public async Task<IActionResult> SubmitQuote([FromBody] QuoteRequestDto request)
