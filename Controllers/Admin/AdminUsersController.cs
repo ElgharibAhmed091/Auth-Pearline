@@ -1,11 +1,12 @@
-﻿using AuthAPI.DTOs;
+﻿using AuthAPI.DTOs.Quote;
+using AuthAPI.DTOs.User;
 using AuthAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace AuthAPI.Controllers
+namespace AuthAPI.Controllers.Admin
 {
     [Route("api/admin/users")]
     [ApiController]

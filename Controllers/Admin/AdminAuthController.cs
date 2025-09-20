@@ -1,4 +1,4 @@
-﻿using AuthAPI.DTOs;
+﻿using AuthAPI.DTOs.Admin;
 using AuthAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -8,7 +8,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace AuthAPI.Controllers
+namespace AuthAPI.Controllers.Admin
 {
     [Route("api/admin/auth")]
     [ApiController]

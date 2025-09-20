@@ -1,4 +1,4 @@
-﻿namespace AuthAPI.DTOs
+﻿namespace AuthAPI.DTOs.Admin
 {
     public class AdminProfileDto
     {

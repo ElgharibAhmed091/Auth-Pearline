@@ -1,4 +1,4 @@
-﻿namespace AuthAPI.DTOs
+﻿namespace AuthAPI.DTOs.Quote
 {
     public class QuoteSummaryDto
     {

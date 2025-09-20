@@ -1,11 +1,11 @@
 ﻿using AuthAPI.Data;
-using AuthAPI.DTOs;
+using AuthAPI.DTOs.Quote;
 using AuthAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace AuthAPI.Controllers
+namespace AuthAPI.Controllers.Admin
 {
     [Route("api/admin/quotes")]
     [ApiController]

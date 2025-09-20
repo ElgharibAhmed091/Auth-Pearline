@@ -4,7 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using System.Security.Claims;
 using AuthAPI.Models;   // مكان ما عندك ApplicationUser
-using AuthAPI.DTOs;     // DTOs بتاعتك
+using AuthAPI.DTOs;
+using AuthAPI.DTOs.Admin;     // DTOs بتاعتك
 
 namespace AuthAPI.Controllers
 {

@@ -1,12 +1,12 @@
 ﻿using AuthAPI.Data;
-using AuthAPI.DTOs;
+using AuthAPI.DTOs.Quote;
 using AuthAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
-namespace AuthAPI.Controllers
+namespace AuthAPI.Controllers.Api
 {
     [Authorize]
     [Route("api/[controller]")]
@@ -61,8 +61,8 @@ namespace AuthAPI.Controllers
                     i.Description,
                     i.Ingredients,
                     i.Usage,
-                    CategoryId = i.CategoryId,
-                    CategoryName = i.CategoryName,
+                    i.CategoryId,
+                    i.CategoryName,
                     i.Quantity,
                     i.IsCase,
                     i.Subtotal
@@ -110,8 +110,8 @@ namespace AuthAPI.Controllers
                     i.Description,
                     i.Ingredients,
                     i.Usage,
-                    CategoryId = i.CategoryId,
-                    CategoryName = i.CategoryName,
+                    i.CategoryId,
+                    i.CategoryName,
                     i.Quantity,
                     i.IsCase,
                     i.Subtotal
@@ -151,7 +151,7 @@ namespace AuthAPI.Controllers
             foreach (var ci in cart.Items)
             {
                 var p = ci.Product;
-                var price = ci.IsCase ? (p?.CasePrice ?? 0m) : (p?.UnitPrice ?? 0m);
+                var price = ci.IsCase ? p?.CasePrice ?? 0m : p?.UnitPrice ?? 0m;
                 var lineSubtotal = price * ci.Quantity;
                 subtotal += lineSubtotal;
 

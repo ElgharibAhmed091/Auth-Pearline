@@ -1,10 +1,10 @@
-﻿using AuthAPI.DTOs;
+﻿using AuthAPI.DTOs.Admin;
 using AuthAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AuthAPI.Controllers
+namespace AuthAPI.Controllers.Admin
 {
     [Route("api/admin/profile")]
     [ApiController]
