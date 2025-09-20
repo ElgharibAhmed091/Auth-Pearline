@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
@@ -20,7 +21,14 @@ namespace AuthAPI.Models
 
         public int CartId { get; set; }
 
+        // new: store the user id directly for easier queries
+        public string UserId { get; set; } = string.Empty;
+
+        // navigation
         [JsonIgnore]
         public virtual Cart Cart { get; set; }
+
+        // new: Quote items snapshot
+        public ICollection<QuoteItem> Items { get; set; } = new List<QuoteItem>();
     }
 }

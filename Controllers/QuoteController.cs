@@ -21,18 +21,17 @@ namespace AuthAPI.Controllers
             _context = context;
         }
 
-
         // GET: api/quote/my
         [HttpGet("my")]
         public async Task<IActionResult> GetMyQuotes()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId)) return Unauthorized();
 
             var quotes = await _context.Quotes
-                .Include(q => q.Cart)
-                .ThenInclude(c => c.Items)
-                .ThenInclude(i => i.Product)
-                .Where(q => q.Cart.UserId == userId)
+                .Include(q => q.Items)
+                .Where(q => q.UserId == userId)
+                .OrderByDescending(q => q.DateCreated)
                 .ToListAsync();
 
             if (!quotes.Any())
@@ -44,30 +43,45 @@ namespace AuthAPI.Controllers
                 q.Email,
                 q.Comments,
                 q.TotalPrice,
-                Items = q.Cart.Items.Select(i => new
+                q.DateCreated,
+                Items = q.Items.Select(i => new
                 {
                     i.Id,
-                    ProductName = i.Product?.ProductName,
+                    i.Barcode,
+                    i.ProductName,
+                    i.Brand,
+                    i.ProductImage,
+                    i.CaseSize,
+                    i.CasesPerLayer,
+                    i.CasesPerPallet,
+                    i.LeadTimeDays,
+                    i.CasePrice,
+                    i.UnitPrice,
+                    i.IsAvailable,
+                    i.Description,
+                    i.Ingredients,
+                    i.Usage,
+                    CategoryId = i.CategoryId,
+                    CategoryName = i.CategoryName,
                     i.Quantity,
-                    PricePerUnit = i.Product?.UnitPrice ?? 0m,
-                    PricePerCase = i.Product?.CasePrice ?? 0m,
-                    Total = (i.Product?.CasePrice ?? i.Product?.UnitPrice ?? 0m) * i.Quantity
+                    i.IsCase,
+                    i.Subtotal
                 })
             });
 
             return Ok(response);
         }
+
         // GET: api/quote/{id}
         [HttpGet("{id}")]
         public async Task<IActionResult> GetQuoteById(int id)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId)) return Unauthorized();
 
             var quote = await _context.Quotes
-                .Include(q => q.Cart)
-                .ThenInclude(c => c.Items)
-                .ThenInclude(i => i.Product)
-                .FirstOrDefaultAsync(q => q.Id == id && q.Cart.UserId == userId);
+                .Include(q => q.Items)
+                .FirstOrDefaultAsync(q => q.Id == id && q.UserId == userId);
 
             if (quote == null)
                 return NotFound(new { message = "Quote not found" });
@@ -78,20 +92,34 @@ namespace AuthAPI.Controllers
                 quote.Email,
                 quote.Comments,
                 quote.TotalPrice,
-                Items = quote.Cart.Items.Select(i => new
+                quote.DateCreated,
+                Items = quote.Items.Select(i => new
                 {
                     i.Id,
-                    ProductName = i.Product?.ProductName,
+                    i.Barcode,
+                    i.ProductName,
+                    i.Brand,
+                    i.ProductImage,
+                    i.CaseSize,
+                    i.CasesPerLayer,
+                    i.CasesPerPallet,
+                    i.LeadTimeDays,
+                    i.CasePrice,
+                    i.UnitPrice,
+                    i.IsAvailable,
+                    i.Description,
+                    i.Ingredients,
+                    i.Usage,
+                    CategoryId = i.CategoryId,
+                    CategoryName = i.CategoryName,
                     i.Quantity,
-                    PricePerUnit = i.Product?.UnitPrice ?? 0m,
-                    PricePerCase = i.Product?.CasePrice ?? 0m,
-                    Total = (i.Product?.CasePrice ?? i.Product?.UnitPrice ?? 0m) * i.Quantity
+                    i.IsCase,
+                    i.Subtotal
                 })
             };
 
             return Ok(response);
         }
-
 
         // POST: api/quote/submit
         [HttpPost("submit")]
@@ -99,6 +127,8 @@ namespace AuthAPI.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var userEmail = User.FindFirstValue(ClaimTypes.Email);
+
+            if (string.IsNullOrEmpty(userId)) return Unauthorized();
 
             var cart = await _context.Carts
                 .Include(c => c.Items)
@@ -108,27 +138,56 @@ namespace AuthAPI.Controllers
             if (cart == null || !cart.Items.Any())
                 return BadRequest("Cart is empty.");
 
-            // calculate total (use CasePrice or UnitPrice depending on your business rule)
-            decimal subtotal = cart.Items.Sum(i =>
-            {
-                var price = i.Product?.CasePrice ?? i.Product?.UnitPrice ?? 0m;
-                return price * i.Quantity;
-            });
-
-            decimal tax = Math.Round(subtotal * TAX_RATE, 2);
-            decimal total = Math.Round(subtotal + tax, 2);
-
+            decimal subtotal = 0m;
             var quote = new Quote
             {
                 Email = string.IsNullOrWhiteSpace(request.Email) ? userEmail ?? string.Empty : request.Email,
                 Comments = request.Comments,
-                TotalPrice = total,
-                CartId = cart.Id
+                CartId = cart.Id,
+                UserId = userId
             };
+
+            // create QuoteItems snapshot
+            foreach (var ci in cart.Items)
+            {
+                var p = ci.Product;
+                var price = ci.IsCase ? (p?.CasePrice ?? 0m) : (p?.UnitPrice ?? 0m);
+                var lineSubtotal = price * ci.Quantity;
+                subtotal += lineSubtotal;
+
+                var qi = new QuoteItem
+                {
+                    Barcode = p?.Barcode ?? ci.ProductBarcode,
+                    ProductName = p?.ProductName ?? string.Empty,
+                    Brand = p?.Brand ?? string.Empty,
+                    ProductImage = p?.ProductImage ?? string.Empty,
+                    CaseSize = p?.CaseSize ?? 1,
+                    CasesPerLayer = p?.CasesPerLayer ?? 0,
+                    CasesPerPallet = p?.CasesPerPallet ?? 0,
+                    LeadTimeDays = p?.LeadTimeDays ?? 0,
+                    CasePrice = p?.CasePrice ?? 0m,
+                    UnitPrice = p?.UnitPrice ?? 0m,
+                    IsAvailable = p?.IsAvailable ?? false,
+                    Description = p?.Description ?? string.Empty,
+                    Ingredients = p?.Ingredients ?? string.Empty,
+                    Usage = p?.Usage ?? string.Empty,
+                    CategoryId = p?.CategoryId ?? 0,
+                    CategoryName = p?.Category?.Name ?? string.Empty,
+
+                    Quantity = ci.Quantity,
+                    IsCase = ci.IsCase,
+                    Subtotal = lineSubtotal
+                };
+
+                quote.Items.Add(qi);
+            }
+
+            decimal tax = Math.Round(subtotal * TAX_RATE, 2);
+            quote.TotalPrice = Math.Round(subtotal + tax, 2);
 
             _context.Quotes.Add(quote);
 
-            // Optionally: clear the cart after submission
+            // optional: clear cart after submission
             // _context.CartItems.RemoveRange(cart.Items);
 
             await _context.SaveChangesAsync();

@@ -19,6 +19,8 @@ namespace AuthAPI.Data
         public DbSet<Cart> Carts { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
         public DbSet<Quote> Quotes { get; set; }
+        public DbSet<QuoteItem> QuoteItems { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -48,6 +50,13 @@ namespace AuthAPI.Data
                 .WithMany()
                 .HasForeignKey(q => q.CartId)
                 .OnDelete(DeleteBehavior.Restrict);
+            // Quote -> QuoteItems one-to-many
+            modelBuilder.Entity<Quote>()
+                .HasMany(q => q.Items)
+                .WithOne(i => i.Quote)
+                .HasForeignKey(i => i.QuoteId)
+                .OnDelete(DeleteBehavior.Cascade);
+
         }
     }
 }
