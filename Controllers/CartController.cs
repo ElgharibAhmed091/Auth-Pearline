@@ -37,23 +37,38 @@ namespace AuthAPI.Controllers
             var response = new CartDto
             {
                 Id = cart.Id,
-                Items = cart.Items.Select(i => new CartItemDto
+                Items = cart.Items.Select(i =>
                 {
-                    Id = i.Id,
-                    ProductBarcode = i.ProductBarcode,
-                    ProductName = i.Product.ProductName,
-                    ProductImage = i.Product.ProductImage,
-                    Quantity = i.Quantity,
-                    IsCase = i.IsCase,
-                    PricePerItem = i.IsCase ? i.Product.CasePrice : i.Product.UnitPrice,
-                    Subtotal = i.IsCase
-                        ? i.Quantity * i.Product.CasePrice
-                        : i.Quantity * i.Product.UnitPrice
+                    var product = i.Product;
+                    var pricePerItem = i.IsCase ? (product?.CasePrice ?? 0m) : (product?.UnitPrice ?? 0m);
+
+                    return new CartItemDto
+                    {
+                        Id = i.Id,
+                        ProductBarcode = i.ProductBarcode,
+                        ProductName = product?.ProductName,
+                        ProductImage = product?.ProductImage,
+                        Quantity = i.Quantity,
+                        IsCase = i.IsCase,
+                        PricePerItem = pricePerItem,
+                        Subtotal = pricePerItem * i.Quantity,
+
+                        // map the actual Product properties you have
+                        CaseSize = product?.CaseSize ?? 1,            // default 1 if null
+                        CasesPerLayer = product?.CasesPerLayer ?? 0,  // default 0
+                        CasesPerPallet = product?.CasesPerPallet ?? 0,// default 0
+                        LeadTimeDays = product?.LeadTimeDays ?? 0     // default 0
+                    };
                 }).ToList(),
-                Total = cart.Items.Sum(i => i.IsCase
-                    ? i.Quantity * i.Product.CasePrice
-                    : i.Quantity * i.Product.UnitPrice)
+                Total = cart.Items.Sum(i =>
+                {
+                    var product = i.Product;
+                    var price = i.IsCase ? (product?.CasePrice ?? 0m) : (product?.UnitPrice ?? 0m);
+                    return price * i.Quantity;
+                })
             };
+
+
 
             return Ok(response);
         }
