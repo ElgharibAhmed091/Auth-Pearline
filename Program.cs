@@ -22,6 +22,12 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
 
+// ? „Â„: Œ·Ì «·‹ NameIdentifier Ì‘ €· „⁄ «· ÊﬂÌ‰
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    options.ClaimsIdentity.UserIdClaimType = System.Security.Claims.ClaimTypes.NameIdentifier;
+});
+
 // ===== JWT =====
 builder.Services.AddAuthentication(options =>
 {
@@ -82,118 +88,59 @@ builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
+// ===== CORS =====
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", b =>
+        b.AllowAnyOrigin()
+         .AllowAnyMethod()
+         .AllowAnyHeader());
+});
+
 var app = builder.Build();
 
-// ===== Dev-only Seeder: ensure roles + SuperAdmin (uses config if present, else defaults) =====
-using (var scope = app.Services.CreateScope())
+// ===== Swagger =====
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    var services = scope.ServiceProvider;
-    var logger = services.GetRequiredService<ILogger<Program>>();
-
-    try
-    {
-        // Only run the automatic creation in Development environment to avoid accidental creation in Production.
-        if (app.Environment.IsDevelopment())
-        {
-            var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-            var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
-            var config = services.GetRequiredService<IConfiguration>();
-
-            async Task SeedAsync()
-            {
-                // roles to ensure
-                var roles = new[] { "User", "Admin", "SuperAdmin" };
-                foreach (var r in roles)
-                {
-                    if (!await roleManager.RoleExistsAsync(r))
-                    {
-                        var rm = await roleManager.CreateAsync(new IdentityRole(r));
-                        if (rm.Succeeded)
-                            logger.LogInformation("Created role {Role}", r);
-                        else
-                            logger.LogWarning("Failed creating role {Role}: {Errors}", r, string.Join(", ", rm.Errors.Select(e => e.Description)));
-                    }
-                }
-
-                // Attempt to read SuperAdmin credentials from configuration first
-                var superEmailFromConfig = config["SuperAdmin:Email"];
-                var superUserNameFromConfig = config["SuperAdmin:UserName"];
-                var superPasswordFromConfig = config["SuperAdmin:Password"];
-
-                // Fallback defaults for local development (change these as needed)
-                var superEmail = !string.IsNullOrWhiteSpace(superEmailFromConfig) ? superEmailFromConfig : "superadmin@pearline.com";
-                var superUserName = !string.IsNullOrWhiteSpace(superUserNameFromConfig) ? superUserNameFromConfig : superEmail;
-                var superPassword = !string.IsNullOrWhiteSpace(superPasswordFromConfig) ? superPasswordFromConfig : "Super@123";
-
-                var existing = await userManager.FindByEmailAsync(superEmail);
-                if (existing == null)
-                {
-                    var super = new ApplicationUser
-                    {
-                        UserName = superUserName!,
-                        Email = superEmail,
-                        EmailConfirmed = true,
-                        FirstName = "Super",
-                        LastName = "Admin"
-                    };
-
-                    var createRes = await userManager.CreateAsync(super, superPassword);
-                    if (createRes.Succeeded)
-                    {
-                        await userManager.AddToRoleAsync(super, "SuperAdmin");
-                        logger.LogInformation("SuperAdmin created: {Email}", superEmail);
-                    }
-                    else
-                    {
-                        logger.LogError("Failed creating SuperAdmin: {Errors}", string.Join(", ", createRes.Errors.Select(e => e.Description)));
-                    }
-                }
-                else
-                {
-                    // Ensure user has the SuperAdmin role
-                    var rolesOfExisting = await userManager.GetRolesAsync(existing);
-                    if (!rolesOfExisting.Contains("SuperAdmin"))
-                    {
-                        var addRoleRes = await userManager.AddToRoleAsync(existing, "SuperAdmin");
-                        if (addRoleRes.Succeeded)
-                            logger.LogInformation("Added SuperAdmin role to existing user {Email}", superEmail);
-                        else
-                            logger.LogError("Failed to add SuperAdmin role to {Email}: {Errors}", superEmail, string.Join(", ", addRoleRes.Errors.Select(e => e.Description)));
-                    }
-                    else
-                    {
-                        logger.LogInformation("SuperAdmin already exists and has role: {Email}", superEmail);
-                    }
-                }
-            }
-
-            // Run seeding synchronously during startup
-            SeedAsync().GetAwaiter().GetResult();
-        }
-        else
-        {
-            logger.LogInformation("Skipping dev-only SuperAdmin seeder because environment is not Development.");
-        }
-    }
-    catch (Exception ex)
-    {
-        logger.LogError(ex, "Error running SuperAdmin seeder");
-    }
-}
-
-// ===== Middleware =====
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Pearline API v1");
+    c.RoutePrefix = "swagger";
+});
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+app.UseCors("AllowAll");
 
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// ===== Error Logging Middleware =====
+app.Use(async (context, next) =>
+{
+    await next();
+
+    if (context.Response.StatusCode >= 400)
+    {
+        string logMessage =
+            $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] Error {context.Response.StatusCode} - " +
+            $"Method: {context.Request.Method}, Path: {context.Request.Path}{context.Request.QueryString}";
+
+        Console.ForegroundColor = context.Response.StatusCode switch
+        {
+            401 => ConsoleColor.Yellow,
+            403 => ConsoleColor.DarkYellow,
+            404 => ConsoleColor.Red,
+            500 => ConsoleColor.DarkRed,
+            _ => ConsoleColor.Gray
+        };
+        Console.WriteLine(logMessage);
+        Console.ResetColor();
+
+        System.Diagnostics.Debug.WriteLine(logMessage);
+    }
+});
 
 app.Run();
