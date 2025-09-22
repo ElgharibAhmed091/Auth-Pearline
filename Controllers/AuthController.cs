@@ -105,7 +105,6 @@ public class AuthController : ControllerBase
         var jwt = new JwtSecurityTokenHandler().WriteToken(token);
         return Ok(new { token = jwt });
     }
-
     // ===== Forgot Password =====
     [HttpPost("forgot-password")]
     public async Task<IActionResult> ForgotPassword(ForgotPasswordDto dto)
@@ -116,9 +115,43 @@ public class AuthController : ControllerBase
         var token = await _userManager.GeneratePasswordResetTokenAsync(user);
         var resetLink = $"{_config["App:ClientUrl"]}/reset-password?email={user.Email}&token={Uri.EscapeDataString(token)}";
 
-        var body = $"Click here to reset your password: {resetLink}";
+        // === Email Template Similar to Competitor ===
+        var body = $@"
+    <html>
+      <body style='font-family:Arial, sans-serif; color:#333; background-color:#ffffff; padding:20px;'>
+        <div style='max-width:600px; margin:0 auto; background:#fff;'>
+          <img src='https://i.ibb.co/JwJ5pVjL/logo-Blueeee.jpg' alt='Pearline Logo' style='max-width:160px; margin-bottom:20px;' />
 
-        await _emailService.SendEmailAsync(dto.Email, "Reset Your Password - Pearline", body);
+          <p style='font-size:14px; color:#000;'>{user.FirstName} {user.LastName},</p>
+
+          <p style='font-size:14px;'>
+            There was recently a request to change the password for your account.
+          </p>
+
+          <p style='font-size:14px;'>
+            If you requested this change, set a new password here:
+          </p>
+
+          <a href='{resetLink}' style='display:inline-block; margin:15px 0; padding:12px 24px; background:#007bff; color:#fff; text-decoration:none; border-radius:4px; font-size:14px;'>
+            Set a New Password
+          </a>
+
+          <p style='font-size:12px; color:#555; margin-top:20px;'>
+            If you did not make this request, you can ignore this email and your password will remain the same.
+          </p>
+
+          <p style='font-size:12px; color:#555; margin-top:20px;'>
+            Thank you, Pearline Team
+          </p>
+        </div>
+      </body>
+    </html>";
+
+        await _emailService.SendEmailAsync(
+            dto.Email,
+            "Reset Your Password - Pearline",
+            body
+        );
 
         return Ok("If the email exists, a reset link will be sent.");
     }
