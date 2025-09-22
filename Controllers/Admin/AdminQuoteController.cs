@@ -221,5 +221,51 @@ namespace AuthAPI.Controllers.Admin
 
             return Ok(response);
         }
+
+        /// <summary>
+        /// DELETE: api/admin/quotes/{id}
+        /// Deletes a quote (and its items) by Id
+        /// </summary>
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteQuote(int id)
+        {
+            var quote = await _context.Quotes
+                .Include(q => q.Items)
+                .FirstOrDefaultAsync(q => q.Id == id);
+
+            if (quote == null)
+                return NotFound(new { message = "Quote not found" });
+
+            if (quote.Items != null && quote.Items.Any())
+                _context.QuoteItems.RemoveRange(quote.Items);
+
+            _context.Quotes.Remove(quote);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Quote deleted successfully" });
+        }
+
+        /// <summary>
+        /// DELETE: api/admin/quotes/all
+        /// Deletes ALL quotes (⚠️ use carefully!)
+        /// </summary>
+        [HttpDelete("all")]
+        public async Task<IActionResult> DeleteAllQuotes()
+        {
+            var allQuotes = await _context.Quotes.Include(q => q.Items).ToListAsync();
+
+            if (!allQuotes.Any())
+                return NotFound(new { message = "No quotes found" });
+
+            var allItems = allQuotes.SelectMany(q => q.Items).ToList();
+            if (allItems.Any())
+                _context.QuoteItems.RemoveRange(allItems);
+
+            _context.Quotes.RemoveRange(allQuotes);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "All quotes deleted successfully" });
+        }
+
     }
 }
