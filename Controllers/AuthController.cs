@@ -5,6 +5,7 @@ using AuthAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -105,69 +106,82 @@ public class AuthController : ControllerBase
         var jwt = new JwtSecurityTokenHandler().WriteToken(token);
         return Ok(new { token = jwt });
     }
-    // ===== Forgot Password =====
+    // ===== Forgot Password: generate & send OTP =====
     [HttpPost("forgot-password")]
     public async Task<IActionResult> ForgotPassword(ForgotPasswordDto dto)
     {
         var user = await _userManager.FindByEmailAsync(dto.Email);
-        if (user is null) return Ok("If the email exists, a reset link will be sent.");
+        if (user is null) return Ok("If the email exists, an OTP will be sent."); // avoid user enumeration
 
-        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-        var resetLink = $"{_config["App:ClientUrl"]}/reset-password?email={user.Email}&token={Uri.EscapeDataString(token)}";
+        // Generate 6-digit OTP
+        var random = new Random();
+        var otp = random.Next(100000, 999999).ToString();
 
-        // === Email Template Similar to Competitor ===
-        var body = $@"
-    <html>
-      <body style='font-family:Arial, sans-serif; color:#333; background-color:#ffffff; padding:20px;'>
-        <div style='max-width:600px; margin:0 auto; background:#fff;'>
-          <img src='https://i.ibb.co/JwJ5pVjL/logo-Blueeee.jpg' alt='Pearline Logo' style='max-width:160px; margin-bottom:20px;' />
+        // Save to DB (invalidate previous OTPs for same email)
+        var existingOtps = await _db.OtpCodes.Where(x => x.Email == dto.Email && !x.IsUsed).ToListAsync();
+        foreach (var x in existingOtps) x.IsUsed = true; // invalidate old ones
+        await _db.SaveChangesAsync();
 
-          <p style='font-size:14px; color:#000;'>{user.FirstName} {user.LastName},</p>
+        var entry = new OtpCode
+        {
+            Email = dto.Email,
+            Code = otp,
+            ExpirationTimeUtc = DateTime.UtcNow.AddMinutes(5),
+            IsUsed = false
+        };
+        await _db.OtpCodes.AddAsync(entry);
+        await _db.SaveChangesAsync();
 
-          <p style='font-size:14px;'>
-            There was recently a request to change the password for your account.
-          </p>
-
-          <p style='font-size:14px;'>
-            If you requested this change, set a new password here:
-          </p>
-
-          <a href='{resetLink}' style='display:inline-block; margin:15px 0; padding:12px 24px; background:#007bff; color:#fff; text-decoration:none; border-radius:4px; font-size:14px;'>
-            Set a New Password
-          </a>
-
-          <p style='font-size:12px; color:#555; margin-top:20px;'>
-            If you did not make this request, you can ignore this email and your password will remain the same.
-          </p>
-
-          <p style='font-size:12px; color:#555; margin-top:20px;'>
-            Thank you, Pearline Team
-          </p>
+        // ===== Email body with logo + OTP =====
+        string body = $@"
+        <div style='font-family:Arial,sans-serif; text-align:center;'>
+            <img src='https://i.ibb.co/gZSmfmRb/pearline-logo-png.jpg' width='120' alt='App Logo'/>
+            <h2 style='color:#333;'>Reset Password OTP</h2>
+  <h2 style='color:#333;'>Welcome to <span style='color:#007bff;'>Pearline</span></h2>
+            <p>Your OTP code is:</p>
+            <h1 style='color:#007bff; letter-spacing:5px;'>{otp}</h1>
+            <p>This code will expire in <b>5 minutes</b>.</p>
         </div>
-      </body>
-    </html>";
+    ";
 
-        await _emailService.SendEmailAsync(
-            dto.Email,
-            "Reset Your Password - Pearline",
-            body
-        );
+        await _emailService.SendEmailAsync(dto.Email, "Reset Password OTP", body);
 
-        return Ok("If the email exists, a reset link will be sent.");
+        return Ok("If the email exists, an OTP will be sent.");
     }
 
-    // ===== Reset Password =====
+
+    // ===== Verify OTP =====
+    [HttpPost("verify-otp")]
+    public async Task<IActionResult> VerifyOtp(VerifyOtpDto dto)
+    {
+        var otp = await _db.OtpCodes
+            .Where(o => o.Email == dto.Email && o.Code == dto.Code && !o.IsUsed)
+            .FirstOrDefaultAsync();
+
+        if (otp is null || otp.ExpirationTimeUtc < DateTime.UtcNow)
+            return BadRequest("Invalid or expired OTP.");
+
+        otp.IsUsed = true; // single-use
+        await _db.SaveChangesAsync();
+
+        return Ok("OTP verified. You can now reset your password.");
+    }
+
+    // ===== Reset Password (after Verify) =====
     [HttpPost("reset-password")]
     public async Task<IActionResult> ResetPassword(ResetPasswordDto dto)
     {
         var user = await _userManager.FindByEmailAsync(dto.Email);
         if (user is null) return BadRequest("User not found.");
 
-        var result = await _userManager.ResetPasswordAsync(user, dto.Token, dto.NewPassword);
+        // Generate Identity reset token
+        var identityToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+        var result = await _userManager.ResetPasswordAsync(user, identityToken, dto.NewPassword);
         if (!result.Succeeded) return BadRequest(result.Errors);
 
         return Ok("Password has been reset successfully.");
     }
+
 
     // ===== Delete Account =====
     [Authorize]

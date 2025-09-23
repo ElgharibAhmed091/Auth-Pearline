@@ -145,18 +145,22 @@ namespace AuthAPI.Controllers
             await _context.SaveChangesAsync();
             return Ok(new { message = "All products added successfully!" });
         }
-        [HttpDelete("{ca}")]
-        public async Task<IActionResult> DeleteProduct1(string barcode)
+        // DELETE product by barcode
+        [HttpDelete("{barcode}")]
+        public async Task<IActionResult> DeleteProduct(string barcode)
         {
             var product = await _context.Products
                 .FirstOrDefaultAsync(p => p.Barcode == barcode);
 
-            if (product == null) return NotFound();
+            if (product == null)
+                return NotFound(new { message = "Product not found." });
 
             _context.Products.Remove(product);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok(new { message = "Product deleted successfully." });
+       
+
         }
         // POST product مع صورة من الجهاز
         [HttpPost("create-with-image")]

@@ -20,6 +20,7 @@ namespace AuthAPI.Data
         public DbSet<CartItem> CartItems { get; set; }
         public DbSet<Quote> Quotes { get; set; }
         public DbSet<QuoteItem> QuoteItems { get; set; }
+        public DbSet<OtpCode> OtpCodes => Set<OtpCode>();
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
