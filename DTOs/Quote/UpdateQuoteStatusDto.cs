@@ -1,4 +1,10 @@
-﻿public class UpdateQuoteStatusDto
+﻿using System.Text.Json.Serialization;
+
+namespace AuthAPI.DTOs.Quote
 {
-    public string Status { get; set; } = string.Empty;
+    public class UpdateQuoteStatusDto
+    {
+        [JsonPropertyName("status")]
+        public string Status { get; set; } = string.Empty;
+    }
 }
