@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
-
+// TEST
 var builder = WebApplication.CreateBuilder(args);
 
 // ===== Database =====
