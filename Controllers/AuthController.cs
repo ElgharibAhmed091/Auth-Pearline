@@ -106,6 +106,10 @@ public class AuthController : ControllerBase
         var jwt = new JwtSecurityTokenHandler().WriteToken(token);
         return Ok(new { token = jwt });
     }
+
+
+
+
     // ===== Forgot Password: generate & send OTP =====
     [HttpPost("forgot-password")]
     public async Task<IActionResult> ForgotPassword(ForgotPasswordDto dto)

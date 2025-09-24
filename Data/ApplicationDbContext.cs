@@ -21,6 +21,8 @@ namespace AuthAPI.Data
         public DbSet<Quote> Quotes { get; set; }
         public DbSet<QuoteItem> QuoteItems { get; set; }
 
+        public DbSet<OtpCode> OtpCodes { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
