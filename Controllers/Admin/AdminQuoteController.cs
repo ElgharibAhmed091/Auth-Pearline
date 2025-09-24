@@ -266,18 +266,17 @@ namespace AuthAPI.Controllers.Admin
 
             return Ok(new { message = "All quotes deleted successfully" });
         }
-        [Authorize(Roles = "Admin,SuperAdmin")]
         [HttpPut("{id}/status")]
-        public async Task<IActionResult> UpdateQuoteStatus(int id, [FromBody] string status)
+        public async Task<IActionResult> UpdateQuoteStatus(int id, [FromBody] UpdateQuoteStatusDto request)
         {
             var quote = await _context.Quotes.FindAsync(id);
             if (quote == null) return NotFound("Quote not found.");
 
             var allowedStatuses = new[] { "Pending", "Completed", "Shipped", "Cancelled" };
-            if (!allowedStatuses.Contains(status))
+            if (!allowedStatuses.Contains(request.Status))
                 return BadRequest($"Invalid status. Allowed: {string.Join(", ", allowedStatuses)}");
 
-            quote.Status = status;
+            quote.Status = request.Status;
             await _context.SaveChangesAsync();
 
             return Ok(new { message = "Quote status updated successfully", quote });
