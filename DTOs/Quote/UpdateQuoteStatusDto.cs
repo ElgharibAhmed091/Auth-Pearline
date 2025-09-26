@@ -1,10 +1,11 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.ComponentModel.DataAnnotations;
+using AuthAPI.Models;
 
 namespace AuthAPI.DTOs.Quote
 {
     public class UpdateQuoteStatusDto
     {
-        [JsonPropertyName("status")]
-        public string Status { get; set; } = string.Empty;
+        [Required]
+        public QuoteStatus Status { get; set; }
     }
 }

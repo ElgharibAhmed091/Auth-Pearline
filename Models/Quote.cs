@@ -34,6 +34,6 @@ namespace AuthAPI.Models
         //  Quote Status
         [Required]
         [MaxLength(20)]
-        public string Status { get; set; } = "Pending"; // default
+        public QuoteStatus Status { get; set; } = QuoteStatus.Pending;
     }
 }

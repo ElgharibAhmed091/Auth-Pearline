@@ -1,4 +1,6 @@
-﻿namespace AuthAPI.DTOs.Quote
+﻿using AuthAPI.Models;
+
+namespace AuthAPI.DTOs.Quote
 {
     public class QuoteItemResponseDto
     {
@@ -22,6 +24,10 @@
         public int Quantity { get; set; }
         public bool IsCase { get; set; }
         public decimal Subtotal { get; set; }
+
+
+
+
     }
 
     public class QuoteAdminDetailDto
@@ -33,6 +39,9 @@
         public DateTime DateCreated { get; set; }
         public string? UserId { get; set; }
         public List<QuoteItemResponseDto> Items { get; set; } = new();
+        public QuoteStatus Status { get; set; }  // بدل string
+
+
     }
 
     public class QuoteAdminListDto
@@ -42,6 +51,9 @@
         public decimal TotalPrice { get; set; }
         public DateTime DateCreated { get; set; }
         public int ItemCount { get; set; }
+
+        public QuoteStatus Status { get; set; }  // بدل string
+
     }
 
     public class PagedResponseDto<T>

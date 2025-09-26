@@ -19,10 +19,7 @@ namespace AuthAPI.Controllers.Admin
             _context = context;
         }
 
-        /// <summary>
-        /// Returns all quotes (no paging). Use carefully for small datasets or exports.
-        /// GET: api/admin/quotes/all
-        /// </summary>
+        // ✅ GET: api/admin/quotes/all
         [HttpGet("all")]
         public async Task<IActionResult> GetAllQuotesNoPaging()
         {
@@ -39,6 +36,7 @@ namespace AuthAPI.Controllers.Admin
                 TotalPrice = q.TotalPrice,
                 DateCreated = q.DateCreated,
                 UserId = string.IsNullOrWhiteSpace(q.UserId) ? null : q.UserId,
+                Status = q.Status, 
                 Items = q.Items.Select(i => new QuoteItemResponseDto
                 {
                     Id = i.Id,
@@ -60,18 +58,14 @@ namespace AuthAPI.Controllers.Admin
                     CategoryName = i.CategoryName,
                     Quantity = i.Quantity,
                     IsCase = i.IsCase,
-                    Subtotal = i.Subtotal
+                    Subtotal = i.Subtotal,
                 }).ToList()
             }).ToList();
 
             return Ok(dtos);
         }
 
-        /// <summary>
-        /// Get paged list of quotes (admin).
-        /// Query params: page, pageSize, from, to, email (optional)
-        /// GET: api/admin/quotes
-        /// </summary>
+        // ✅ GET: api/admin/quotes
         [HttpGet]
         public async Task<IActionResult> GetAllQuotes(
             [FromQuery] int page = 1,
@@ -83,9 +77,7 @@ namespace AuthAPI.Controllers.Admin
             if (page <= 0) page = 1;
             if (pageSize <= 0 || pageSize > 500) pageSize = 25;
 
-            var query = _context.Quotes
-                .Include(q => q.Items)
-                .AsQueryable();
+            var query = _context.Quotes.Include(q => q.Items).AsQueryable();
 
             if (from.HasValue)
                 query = query.Where(q => q.DateCreated >= from.Value);
@@ -110,7 +102,8 @@ namespace AuthAPI.Controllers.Admin
                 Email = q.Email ?? string.Empty,
                 TotalPrice = q.TotalPrice,
                 DateCreated = q.DateCreated,
-                ItemCount = q.Items?.Count ?? 0
+                ItemCount = q.Items?.Count ?? 0,
+                Status = q.Status 
             }).ToList();
 
             var response = new PagedResponseDto<QuoteAdminListDto>
@@ -124,10 +117,7 @@ namespace AuthAPI.Controllers.Admin
             return Ok(response);
         }
 
-        /// <summary>
-        /// Get admin-level details for a specific quote id.
-        /// GET: api/admin/quotes/{id}
-        /// </summary>
+        // ✅ GET: api/admin/quotes/{id}
         [HttpGet("{id}")]
         public async Task<IActionResult> GetQuoteById(int id)
         {
@@ -146,6 +136,7 @@ namespace AuthAPI.Controllers.Admin
                 TotalPrice = quote.TotalPrice,
                 DateCreated = quote.DateCreated,
                 UserId = string.IsNullOrWhiteSpace(quote.UserId) ? null : quote.UserId,
+                Status = quote.Status, 
                 Items = quote.Items.Select(i => new QuoteItemResponseDto
                 {
                     Id = i.Id,
@@ -174,15 +165,13 @@ namespace AuthAPI.Controllers.Admin
             return Ok(dto);
         }
 
-        /// <summary>
-        /// Get all quotes for a specific userId (admin).
-        /// GET: api/admin/quotes/user/{userId}
-        /// </summary>
+        // ✅ GET: api/admin/quotes/user/{userId}
         [HttpGet("user/{userId}")]
         public async Task<IActionResult> GetQuotesByUser(string userId,
             [FromQuery] int page = 1, [FromQuery] int pageSize = 50)
         {
-            if (string.IsNullOrWhiteSpace(userId)) return BadRequest(new { message = "userId is required" });
+            if (string.IsNullOrWhiteSpace(userId))
+                return BadRequest(new { message = "userId is required" });
 
             if (page <= 0) page = 1;
             if (pageSize <= 0 || pageSize > 500) pageSize = 50;
@@ -208,7 +197,8 @@ namespace AuthAPI.Controllers.Admin
                 Email = q.Email ?? string.Empty,
                 TotalPrice = q.TotalPrice,
                 DateCreated = q.DateCreated,
-                ItemCount = q.Items?.Count ?? 0
+                ItemCount = q.Items?.Count ?? 0,
+                Status = q.Status 
             }).ToList();
 
             var response = new PagedResponseDto<QuoteAdminListDto>
@@ -222,10 +212,7 @@ namespace AuthAPI.Controllers.Admin
             return Ok(response);
         }
 
-        /// <summary>
-        /// DELETE: api/admin/quotes/{id}
-        /// Deletes a quote (and its items) by Id
-        /// </summary>
+        // ✅ DELETE: api/admin/quotes/{id}
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteQuote(int id)
         {
@@ -245,10 +232,7 @@ namespace AuthAPI.Controllers.Admin
             return Ok(new { message = "Quote deleted successfully" });
         }
 
-        /// <summary>
-        /// DELETE: api/admin/quotes/all
-        /// Deletes ALL quotes (⚠️ use carefully!)
-        /// </summary>
+        // ✅ DELETE: api/admin/quotes/all
         [HttpDelete("all")]
         public async Task<IActionResult> DeleteAllQuotes()
         {
@@ -266,24 +250,22 @@ namespace AuthAPI.Controllers.Admin
 
             return Ok(new { message = "All quotes deleted successfully" });
         }
-        [Authorize(Roles = "Admin,SuperAdmin")]
+
+        // ✅ PUT: api/admin/quotes/{id}/status
         [HttpPut("{id}/status")]
         public async Task<IActionResult> UpdateQuoteStatus(int id, [FromBody] UpdateQuoteStatusDto dto)
         {
             var quote = await _context.Quotes.FindAsync(id);
             if (quote == null) return NotFound("Quote not found.");
 
-            var allowedStatuses = new[] { "Pending", "Completed", "Shipped", "Cancelled" };
-            if (!allowedStatuses.Contains(dto.Status))
-                return BadRequest($"Invalid status. Allowed: {string.Join(", ", allowedStatuses)}");
+            // ✅ Validate enum
+            if (!Enum.IsDefined(typeof(QuoteStatus), dto.Status))
+                return BadRequest($"Invalid status. Allowed: {string.Join(", ", Enum.GetNames(typeof(QuoteStatus)))}");
 
             quote.Status = dto.Status;
             await _context.SaveChangesAsync();
 
-            return Ok(new { message = "Quote status updated successfully", quote });
+            return Ok(new { message = "Quote status updated successfully", status = quote.Status });
         }
-
-
-
     }
 }

@@ -51,6 +51,7 @@ namespace AuthAPI.Data
                 .WithMany()
                 .HasForeignKey(q => q.CartId)
                 .OnDelete(DeleteBehavior.Restrict);
+
             // Quote -> QuoteItems one-to-many
             modelBuilder.Entity<Quote>()
                 .HasMany(q => q.Items)
@@ -58,6 +59,10 @@ namespace AuthAPI.Data
                 .HasForeignKey(i => i.QuoteId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            // 🟢 أهم إضافة: نخزن Enum كـ string
+            modelBuilder.Entity<Quote>()
+                .Property(q => q.Status)
+                .HasConversion<string>();
         }
     }
 }
