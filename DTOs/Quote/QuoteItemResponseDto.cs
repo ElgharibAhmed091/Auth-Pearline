@@ -1,4 +1,5 @@
 ﻿using AuthAPI.Models;
+using System.Text.Json.Serialization;
 
 namespace AuthAPI.DTOs.Quote
 {
@@ -24,10 +25,6 @@ namespace AuthAPI.DTOs.Quote
         public int Quantity { get; set; }
         public bool IsCase { get; set; }
         public decimal Subtotal { get; set; }
-
-
-
-
     }
 
     public class QuoteAdminDetailDto
@@ -39,9 +36,9 @@ namespace AuthAPI.DTOs.Quote
         public DateTime DateCreated { get; set; }
         public string? UserId { get; set; }
         public List<QuoteItemResponseDto> Items { get; set; } = new();
-        public QuoteStatus Status { get; set; }  // بدل string
 
-
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public QuoteStatus Status { get; set; }
     }
 
     public class QuoteAdminListDto
@@ -52,8 +49,8 @@ namespace AuthAPI.DTOs.Quote
         public DateTime DateCreated { get; set; }
         public int ItemCount { get; set; }
 
-        public QuoteStatus Status { get; set; }  // بدل string
-
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public QuoteStatus Status { get; set; }
     }
 
     public class PagedResponseDto<T>

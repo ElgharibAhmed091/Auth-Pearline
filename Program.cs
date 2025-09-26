@@ -10,12 +10,12 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// ===== Controllers + JSON options (one call only) =====
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
-        options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     });
-
 
 // ===== Database =====
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -52,13 +52,14 @@ builder.Services.AddAuthentication(options =>
         ValidIssuer = builder.Configuration["Jwt:Issuer"],
         ValidAudience = builder.Configuration["Jwt:Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!)
+            Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? string.Empty)
         ),
         ClockSkew = TimeSpan.FromSeconds(30)
     };
 });
 
 // ===== Swagger =====
+builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Pearline API", Version = "v1" });
@@ -92,9 +93,6 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 builder.Services.AddTransient<IEmailService, EmailService>();
 
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-
 // ===== CORS =====
 builder.Services.AddCors(options =>
 {
@@ -106,7 +104,7 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// ===== Swagger =====
+// ===== Swagger UI =====
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
@@ -117,6 +115,9 @@ app.UseSwaggerUI(c =>
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
+// ===== Routing + CORS + Auth (ordered) =====
+app.UseRouting();
+
 app.UseCors("AllowAll");
 
 app.UseAuthentication();
@@ -124,7 +125,19 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-// ===== Error Logging Middleware =====
+// ===== Diagnostics: ????? ??????? ??? assembly ??? ????? =====
+try
+{
+    var asm = System.Reflection.Assembly.GetExecutingAssembly();
+    var buildTime = System.IO.File.GetLastWriteTimeUtc(asm.Location).ToString("o");
+    Console.WriteLine($"[Startup] Assembly: {asm.GetName().Name}, BuildTimeUTC: {buildTime}");
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"[Startup] Unable to read assembly info: {ex.Message}");
+}
+
+// ===== Error Logging Middleware (keep as-is) =====
 app.Use(async (context, next) =>
 {
     await next();
